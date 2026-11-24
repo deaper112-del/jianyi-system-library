@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "北京简一系统库",
-  description: "客资系统、自我提升和欢乐空间的入口。",
+  description: "自我提升和欢乐空间的入口。",
 };
 
 export const viewport: Viewport = {

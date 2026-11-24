@@ -4,7 +4,7 @@
  * this shell.
  */
 
-export type LiveProgramId = "ledger" | "exam" | "reading" | "mbti" | "wheel";
+export type LiveProgramId = "exam" | "reading" | "mbti" | "wheel";
 
 type ProgramSource = {
   /** Preferred published URL when we have confirmed it elsewhere (README, code). */
@@ -14,10 +14,6 @@ type ProgramSource = {
 };
 
 const SOURCES: Record<LiveProgramId, ProgramSource> = {
-  ledger: {
-    slug: "customer-ledger",
-    candidates: [],
-  },
   exam: {
     slug: "online-exam",
     candidates: ["https://online-exam.apps.grok.bot"],
@@ -77,6 +73,7 @@ function slugUrl(slug: string): string {
 /** Resolve the current live URL for a program (never a vendored copy). */
 export async function resolveLiveOrigin(id: LiveProgramId): Promise<string | null> {
   const source = SOURCES[id];
+  if (!source) return null;
   const tried = new Set<string>();
   for (const url of source.candidates) {
     const normalized = url.endsWith("/") ? url : `${url}/`;
@@ -95,7 +92,6 @@ export async function resolveLiveOrigin(id: LiveProgramId): Promise<string | nul
   return null;
 }
 
-export function liveGapReason(id: LiveProgramId): string | undefined {
-  if (id === "ledger") return "customer-ledger 仓库未找到可嵌入的稳定线上地址";
+export function liveGapReason(_id: LiveProgramId): string | undefined {
   return undefined;
 }

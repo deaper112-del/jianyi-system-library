@@ -16,19 +16,6 @@ export type Section = {
 
 export const sections: Section[] = [
   {
-    id: "customers",
-    name: "客资系统",
-    kicker: "台账",
-    blurb: "客户、设计师和每日工作记在同一处。",
-    programs: [
-      {
-        id: "ledger",
-        name: "简一前端系统",
-        blurb: "销售、驻店设计师和数据管理共用的客源台账。",
-      },
-    ],
-  },
-  {
     id: "study",
     name: "自我提升",
     kicker: "学习",

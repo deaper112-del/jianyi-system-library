@@ -183,7 +183,7 @@ h1 {
 
 @media (min-width: 800px) {
   .shell { padding-top: 56px; }
-  .doors { grid-template-columns: repeat(3, 1fr); }
+  .doors { grid-template-columns: repeat(2, 1fr); }
   .door { min-height: 320px; padding: 28px; }
   .cards { grid-template-columns: repeat(2, 1fr); }
   .kicker { display: inline; font-size: 13px; color: var(--cinnabar); letter-spacing: 0.18em; }

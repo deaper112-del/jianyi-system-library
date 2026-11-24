@@ -7,7 +7,7 @@ export default function HomePage() {
       <header className="mast">
         <p className="eyebrow">北京</p>
         <h1>简一系统库</h1>
-        <p className="lede">三个入口。点进去就是正在用的程序。</p>
+        <p className="lede">两个入口。点进去就是正在用的程序。</p>
       </header>
       <nav className="doors" aria-label="系统入口">
         {sections.map((section, index) => (
