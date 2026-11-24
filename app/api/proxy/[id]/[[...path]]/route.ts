@@ -1,6 +1,13 @@
+import { programById } from "@/lib/catalog";
 import type { LiveProgramId } from "@/lib/live-origin";
 import { resolveLiveOrigin } from "@/lib/live-origin";
-import { isRewritable, rewriteLocation, rewriteSetCookie, rewriteText } from "@/lib/rewrite";
+import {
+  injectLibraryChrome,
+  isRewritable,
+  rewriteLocation,
+  rewriteSetCookie,
+  rewriteText,
+} from "@/lib/rewrite";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -96,7 +103,18 @@ async function proxy(request: Request, context: RouteContext): Promise<Response>
   const type = upstreamResponse.headers.get("content-type");
   if (request.method !== "HEAD" && upstreamResponse.body && isRewritable(type)) {
     const text = await upstreamResponse.text();
-    const rewritten = rewriteText(text, prefix, origin);
+    let rewritten = rewriteText(text, prefix, origin);
+    const mime = type?.split(";")[0].trim().toLowerCase();
+    if (mime === "text/html" && request.method === "GET") {
+      const found = programById(id);
+      if (found) {
+        rewritten = injectLibraryChrome(rewritten, {
+          sectionHref: `/section/${found.section.id}`,
+          sectionLabel: found.section.name,
+          programName: found.program.name,
+        });
+      }
+    }
     outHeaders.delete("content-length");
     return new Response(rewritten, { status: upstreamResponse.status, headers: outHeaders });
   }

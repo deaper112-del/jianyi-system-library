@@ -15,6 +15,32 @@ export function rewriteText(text: string, prefix: string, origin: string): strin
   return out;
 }
 
+export type ShellChrome = {
+  sectionHref: string;
+  sectionLabel: string;
+  programName: string;
+};
+
+const SHELL_BAR_ID = "jianyi-shell-bar";
+
+/** Fixed top bar so programs open at top level, not in an iframe. */
+export function injectLibraryChrome(html: string, chrome: ShellChrome): string {
+  if (!/<body[\s>]/i.test(html) || html.includes(SHELL_BAR_ID)) return html;
+  const bar = `
+<nav id="${SHELL_BAR_ID}" aria-label="简一系统库" style="
+  position:fixed;z-index:2147483646;left:0;right:0;top:0;display:flex;align-items:center;gap:8px;
+  min-height:52px;padding:8px 12px;padding-top:calc(8px + env(safe-area-inset-top,0px));
+  background:#1c1915;color:#f6f1e8;font:600 14px/1.2 'PingFang SC','Microsoft YaHei',sans-serif;
+  box-shadow:0 1px 0 rgba(255,255,255,.06)
+">
+  <a href="${chrome.sectionHref}" style="display:inline-flex;align-items:center;min-height:40px;padding:0 12px;border-radius:999px;background:#3a332c;color:inherit;text-decoration:none;white-space:nowrap">返回${chrome.sectionLabel}</a>
+  <a href="/" style="display:inline-flex;align-items:center;min-height:40px;padding:0 12px;border-radius:999px;background:#3a332c;color:inherit;text-decoration:none">首页</a>
+  <strong style="margin-left:auto;font-weight:600;font-size:15px;text-align:right">${chrome.programName}</strong>
+</nav>
+<style id="jianyi-shell-bar-style">body{padding-top:calc(52px + env(safe-area-inset-top,0px))!important}</style>`;
+  return html.replace(/<body([^>]*)>/i, `<body$1>${bar}`);
+}
+
 export function injectHtmlBase(html: string, base: string): string {
   if (/<base\s/i.test(html)) return html;
   const tag = `<base href="${base}">`;
